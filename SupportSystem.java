@@ -37,8 +37,8 @@ public class SupportSystem
         printWelcome();
 
         while(!finished) {
-            String input = reader.getInput();
-
+            String input = reader.getInput().trim();
+            
             if(input.startsWith("bye")) {
                 finished = true;
             }
