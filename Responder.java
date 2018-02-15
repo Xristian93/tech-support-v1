@@ -49,8 +49,13 @@ public class Responder
     public String generateResponse (HashSet<String> word){
         String response = null;
         Iterator<String> iterator = word.iterator();
-        String userInputString = iterator.next();
-        response = responseMap.get(word);
+        boolean buscando = true;
+        while (iterator.hasNext() && buscando){
+            response = responseMap.get(iterator.next());
+            if (response != null){
+                buscando = false;
+            }
+        }
         if (response == null){
             response = listaRespuestas.get(aleatorio.nextInt(listaRespuestas.size()));
         }
