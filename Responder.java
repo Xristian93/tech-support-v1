@@ -15,7 +15,7 @@ public class Responder
 {
     private Random aleatorio;
     private ArrayList<String> listaRespuestas;
-    private HashMap<String, String> responseMap;
+    private HashMap<HashSet<String>, String> responseMap;
 
     /**
      * Construct a Responder - nothing to do
@@ -23,24 +23,25 @@ public class Responder
     public Responder()
     {
         aleatorio = new Random();
-        listaRespuestas = new ArrayList<String>();
-        listaRespuestas.add("Muy interesante");
-        listaRespuestas.add("No lo entiendo");
-        listaRespuestas.add("Alguna duda mas?");
-        listaRespuestas.add("Lo siento, no puedo ayudarle");
-        listaRespuestas.add("Buena idea");
-        responseMap = new HashMap<String, String>();
-        fillResponseMap();
-    }
+        responseMap = new HashMap<>();
+        createDefaultResponses();
 
-    /**
-     * Introducir en el mapa de respuestas las palabras claves y sus respuestas
-     */
-    public void fillResponseMap(){
-        responseMap.put("lento","Creo que tienes un problema con el hardware de tu equipo");
-        responseMap.put("error","Todo software tiene algun pequeño error, no se preocupe");
-        responseMap.put("problema","Ese problema es muy facil de solucionar, reinicie su equipo");
-        responseMap.put("grafica","Su tarjeta grafica esta muy anticuada, pruebe a cambiarla");
+        HashSet<String> set01 = new HashSet<>();
+        set01.add("free");
+        set01.add("app");
+        HashSet<String> set02 = new HashSet<>();
+        set02.add("free");
+        HashSet<String> set03 = new HashSet<>();
+        set03.add("app");
+        HashSet<String> set04 = new HashSet<>();
+        set04.add("problem");
+        set04.add("linux");
+        set04.add("crash");
+
+        responseMap.put(set04,"Creo que tienes un problema con el hardware de tu equipo");
+        responseMap.put(set01,"Todo software tiene algun pequeño error, no se preocupe");
+        responseMap.put(set02,"Ese problema es muy facil de solucionar, reinicie su equipo");
+        responseMap.put(set03,"Su tarjeta grafica esta muy anticuada, pruebe a cambiarla");
     }
 
     /**
@@ -48,16 +49,14 @@ public class Responder
      */
     public String generateResponse (HashSet<String> word){
         String response = null;
-        Iterator<String> iterator = word.iterator();
-        boolean buscando = true;
-        while (iterator.hasNext() && buscando){
-            response = responseMap.get(iterator.next());
-            if (response != null){
-                buscando = false;
-            }
-        }
+        response = responseMap.get(word);
         if (response == null){
-            response = listaRespuestas.get(aleatorio.nextInt(listaRespuestas.size()));
+            if (listaRespuestas.size() > 0){
+                response = listaRespuestas.remove(aleatorio.nextInt(listaRespuestas.size()));
+            }
+            else{
+                response = "Sorry, I don´t understand your question";
+            }
         }
         return response;
     }
@@ -70,5 +69,14 @@ public class Responder
     {
         int posicion = aleatorio.nextInt(listaRespuestas.size());
         return listaRespuestas.get(posicion);
+    }
+
+    private void createDefaultResponses(){
+        listaRespuestas = new ArrayList<String>();
+        listaRespuestas.add("Muy interesante");
+        listaRespuestas.add("No lo entiendo");
+        listaRespuestas.add("Alguna duda mas?");
+        listaRespuestas.add("Lo siento, no puedo ayudarle");
+        listaRespuestas.add("Buena idea");
     }
 }
